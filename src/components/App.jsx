@@ -22,6 +22,8 @@ class App extends React.Component{
     };
     this.handleVideoClick = this.handleVideoClick.bind(this);
     this.handleSearch = this.handleSearch.bind(this);
+    //this.handleSearch = _.debounce(this.handleSearch, 500);
+    this.bounceSearch = this.debounceHandler(this.handleSearch);
   }
 
   componentDidMount(){
@@ -39,12 +41,23 @@ class App extends React.Component{
   }
 
   handleSearch(event){
-    var query = document.getElementsByClassName('form-control')[0].value;
-    
-    this.props.searchYouTube({query: query}, (videos)=>{
+    //console.log('form-control', document.getElementsByClassName('form-control'));
+    //console.dir(this);
+    //var query = document.getElementById('searchInput').value;
+    //console.log('query', query);
+    //console.dir(event.target);
+    this.props.searchYouTube({query: event.target.value}, (videos)=>{
       this.setState({allVideos: videos});
       this.setState({currentVideo: videos[0]});
     });
+  }
+
+  debounceHandler(func){
+    var debounceFunc = _.debounce(func, 500);
+    return function(e){
+      e.persist()
+      return debounceFunc(e);
+    }  
   }
    
   render(){
@@ -52,15 +65,15 @@ class App extends React.Component{
       <div>
         <nav className="navbar">
           <div className="col-md-6 offset-md-3">
-            <div><h5><Search handleSearch={this.handleSearch} /></h5></div>
+            <div><Search handleSearch={this.bounceSearch} /></div>
           </div>
         </nav>
         <div className="row">
           <div className="col-md-7">
-            <div><h5><VideoPlayer video={this.state.currentVideo}/></h5></div>
+            <div><VideoPlayer video={this.state.currentVideo}/></div>
           </div>
           <div className="col-md-5">
-            <div><h5><VideoList callback={this.handleVideoClick} videos ={this.state.allVideos} /> </h5></div>
+            <div><VideoList callback={this.handleVideoClick} videos ={this.state.allVideos} /></div>
           </div>
         </div>
       </div>

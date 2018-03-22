@@ -8,7 +8,10 @@
   "scripts": {
     "test": "live-server --open=./SpecRunner.html --port=8081",
     "postinstall": "curl -s https://raw.githubusercontent.com/reactorcore/pomander/master/bin/install | bash",
-    "build": "babel . -w --out-dir compiled --presets=env,react --ignore=node_modules,compiled --source-maps inline"
+    "installLive": "npm install -g live-server",
+    "installBabel": "npm install -g babel-cli",
+    "build": "babel . -w --out-dir compiled --presets=env,react --ignore=node_modules,compiled --source-maps inline",   
+    "start": "npm install; npm run installLive; npm run installBabel; npm run build"
 
 },
   "dependencies": {
